@@ -1,10 +1,10 @@
-from .Process import ProcessSim
+from .Scheduler import SchedulingProcess
 from queue import Queue
 
 """
 First-Come, First-Served (FCFS) Scheduling Algorithm Implementation
 """
-class FCFS(ProcessSim):
+class FCFS(SchedulingProcess):
     
     def __init__(self, pid, arrv_time, burst_time, start, comp_time, wait_time=0, turn_around_time=0, response_time=0):
         """
@@ -48,4 +48,3 @@ class FCFS(ProcessSim):
     
     def get_response(self):
         return self.response_time
-

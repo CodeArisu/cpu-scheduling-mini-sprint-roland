@@ -1,4 +1,4 @@
-class ProcessSim:
+class SchedulingProcess:
     
     def __init__(self, pid, arrv_time, burst_time, comp_time):
         """
@@ -9,7 +9,7 @@ class ProcessSim:
         :param burst_time: Burst Time of the process
         :param comp_time: Completion Time of the process
         """
-        self.pid = pid  # Process ID
+        self.pid = pid                # Process ID
         self.arrv_time = arrv_time    # Arrival Time
         self.burst_time = burst_time  # Burst Time
         self.comp_time = comp_time    # Completion Time
@@ -20,6 +20,3 @@ class ProcessSim:
 
     def get(self):
         return self.pid, self.arrv_time, self.burst_time, self.comp_time
-
-    
-    
