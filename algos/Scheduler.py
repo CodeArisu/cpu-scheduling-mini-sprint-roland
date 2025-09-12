@@ -1,6 +1,6 @@
 class SchedulingProcess:
     
-    def __init__(self, pid, arrv_time, burst_time, comp_time):
+    def __init__(self, **kwargs):
         """
         Initialize a Process Simulation instance.
         
@@ -9,10 +9,11 @@ class SchedulingProcess:
         :param burst_time: Burst Time of the process
         :param comp_time: Completion Time of the process
         """
-        self.pid = pid                # Process ID
-        self.arrv_time = arrv_time    # Arrival Time
-        self.burst_time = burst_time  # Burst Time
-        self.comp_time = comp_time    # Completion Time
+        self.pid = kwargs.get('pid', 0)                # Process ID
+        self.arrv_time = kwargs.get('arrv_time', 0)    # Arrival Time
+        self.burst_time = kwargs.get('burst_time', 0)  # Burst Time
+        self.comp_time = kwargs.get('comp_time', 0)    # Completion Time
+
 
     def __repr__(self):
         return f"Process(pid={self.pid}, arrv_time={self.arrv_time}, burst_time={self.burst_time}, comp_time={self.comp_time})"

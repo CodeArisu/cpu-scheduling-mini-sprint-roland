@@ -10,30 +10,23 @@ headers = ["PID", "Arrival Time", "Burst Time", "Start", "Completion Time", "Wai
 
 if __name__ == "__main__":
     processes = []
-    prev_time = 0
     
     for i in range(len(data['arrv_time'])):
         arrival = data['arrv_time'][i]
         burst = data['burst_time'][i]
         
-        start = max(prev_time, arrival)
+        obj = fcfs.FCFS(pid=i+1, arrv_time=arrival, burst_time=burst)
+        processes.append(obj)
 
-        comp_time = start + burst
-        turn_at = comp_time - arrival
-        wait_time = turn_at - burst
-        resp_time = start - arrival
+    scheduled = fcfs.FCFS.schedule(processes)
+    
+    results = [p.get() for p in scheduled]
 
-        p = fcfs.FCFS(i + 1, arrival, burst, comp_time, start, wait_time, turn_at, resp_time)
-        processes.append(p.get())
-        
-        prev_time = comp_time
-        
-    n = len(processes)
-    avg_tat = sum(p[5] for p in processes) / n
-    avg_wt = sum(p[6] for p in processes) / n
-    avg_rt = sum(p[7] for p in processes) / n
+    avg_tat = sum(p[5] for p in results) / len(results)
+    avg_wt = sum(p[6] for p in results) / len(results)
+    avg_rt = sum(p[7] for p in results) / len(results)
 
-    processes.append(("Average", "", "", "", "", f"{avg_tat:.2f}", f"{avg_wt:.2f}", f"{avg_rt:.2f}"))
+    results.append(("Average", "", "", "", "", f"{avg_tat:.2f}", f"{avg_wt:.2f}", f"{avg_rt:.2f}"))
 
     print("First-Come, First-Served (FCFS) Scheduling Algorithm Results:")
-    print(tabulate(processes, headers=headers, tablefmt="fancy_grid", stralign="center", numalign="center"))
+    print(tabulate(results, headers=headers, tablefmt="fancy_grid", stralign="center", numalign="center"))
