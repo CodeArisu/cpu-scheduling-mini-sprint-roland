@@ -1,4 +1,5 @@
 from .Scheduler import SchedulingProcess
+from collections import deque
 
 class RoundRobin(SchedulingProcess):
     def __init__(self, quantum, **kwargs):
@@ -7,67 +8,90 @@ class RoundRobin(SchedulingProcess):
         self.burst_time_rem = self.burst_time
         self.turn_around_time = 0
         self.wait_time = 0
+        self.response_time = None  # track first execution
         self.isComplete = False
         self.inQueue = False
 
     def __repr__(self):
         return (f"RoundRobin(pid={self.pid}, arrv_time={self.arrv_time}, burst_time={self.burst_time}, "
                 f"burst_time_rem={self.burst_time_rem}, quantum={self.quantum}, comp_time={self.comp_time}, "
-                f"wait={self.wait_time}, tat={self.turn_around_time}, isComplete={self.isComplete})")
-        
-    @staticmethod
-    def schedule(processes):
-        """
-        Perform Round Robin scheduling on a list of RoundRobin processes.
-        """
-        from collections import deque
+                f"wait={self.wait_time}, tat={self.turn_around_time}, resp={self.response_time}, "
+                f"isComplete={self.isComplete})")
 
-        processes.sort(key=lambda p: p.arrv_time)
-        queue = deque()
-        time = 0
-        completed = 0
-        n = len(processes)
-
-        while completed < n:
-            # Add all processes that have arrived by current time to the queue
-            for proc in processes:
-                if proc.arrv_time <= time and not proc.inQueue and not proc.isComplete:
-                    queue.append(proc)
-                    proc.inQueue = True
-
-            if queue:
-                current = queue.popleft()
-                exec_time = min(current.burst_time_rem, current.quantum)
-                time += exec_time
-                current.burst_time_rem -= exec_time
-
-                # If process is completed
-                if current.burst_time_rem == 0:
-                    current.comp_time = time
-                    current.turn_around_time = current.compute_turnaround()
-                    current.wait_time = current.turn_around_time - current.burst_time
-                    current.isComplete = True
-                    completed += 1
-                else:
-                    # Re-add the process to the end of the queue
-                    queue.append(current)
-            else:
-                # If no process is in the queue, jump to the next arrival time
-                next_arrival = min((p.arrv_time for p in processes if not p.isComplete), default=time)
-                time = max(time, next_arrival)
-
-        return processes
-    
     def get(self):
-        return (self.formatted_id(), self.arrv_time, self.burst_time, self.comp_time,
-                self.quantum, self.turn_around_time, self.wait_time, self.wait_time)   
-    
+        return (self.pid, self.arrv_time, self.burst_time,
+                self.comp_time, self.quantum,
+                self.turn_around_time, self.wait_time, self.response_time)
+        
     def to_dict(self):
         parent = super().to_dict()
         child = {
             "Quantum": self.quantum,
-            "Waiting Time": self.wait_time,
             "Turn Around Time": self.turn_around_time,
-            "Response Time": self.wait_time
+            "Waiting Time": self.wait_time,
+            "Response Time": self.response_time
         }
         return {**parent, **child}
+    
+    def get_quantum(self):
+        return self.quantum
+
+    @staticmethod
+    def schedule(processes):
+        """
+        Perform Round Robin scheduling.
+        :param processes: list[RoundRobin]
+        :return: list[RoundRobin] scheduled
+        """
+        time = 0
+        ready_queue = deque()
+        scheduled = []
+
+        # Sort by arrival
+        processes.sort(key=lambda p: p.arrv_time)
+        n = len(processes)
+        remaining = n
+        i = 0  # index for arrivals
+
+        # push first arrival
+        if processes:
+            ready_queue.append(processes[0])
+            processes[0].inQueue = True
+            i = 1
+
+        while remaining > 0:
+            if not ready_queue:
+                # no process in queue, jump to next arrival
+                time = processes[i].arrv_time
+                ready_queue.append(processes[i])
+                processes[i].inQueue = True
+                i += 1
+
+            proc = ready_queue.popleft()
+
+            if proc.response_time is None:
+                proc.response_time = time - proc.arrv_time
+
+            # execute process
+            exec_time = min(proc.get_quantum(), proc.burst_time_rem)
+            time += exec_time
+            proc.burst_time_rem -= exec_time
+
+            while i < n and processes[i].arrv_time <= time:
+                if not processes[i].inQueue and not processes[i].isComplete:
+                    ready_queue.append(processes[i])
+                    processes[i].inQueue = True
+                i += 1
+
+            # if process still has burst left then requeue it
+            if proc.burst_time_rem > 0:
+                ready_queue.append(proc)
+            else:
+                proc.isComplete = True
+                proc.comp_time = time
+                proc.turn_around_time = proc.comp_time - proc.arrv_time
+                proc.wait_time = proc.turn_around_time - proc.burst_time
+                remaining -= 1
+                scheduled.append(proc)
+
+        return scheduled

@@ -14,15 +14,11 @@ class SchedulingProcess:
         self.burst_time = kwargs.get('burst_time', 0)  # Burst Time
         self.comp_time = kwargs.get('comp_time', 0)    # Completion Time
 
-
     def __repr__(self):
         return f"Process(pid={self.pid}, arrv_time={self.arrv_time}, burst_time={self.burst_time}, comp_time={self.comp_time})"
 
     def get(self):
         return self.pid, self.arrv_time, self.burst_time, self.comp_time
-    
-    def compute_completion(self):
-        return self.start + self.burst_time
     
     def compute_turnaround(self):
         return self.comp_time - self.arrv_time

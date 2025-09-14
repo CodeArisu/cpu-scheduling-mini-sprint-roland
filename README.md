@@ -6,6 +6,8 @@ A small coding project for simulating CPU Scheduling Algorithms such as First Co
 ## How to Run
 * Using IDE (VSCode) run main.py
 * Using terminal run:
+<br/>
+
 activate python Virtual Environment:
 ```bash
 source .venv/bin/activate
@@ -43,4 +45,58 @@ Scheduling Results: FIRST COME FIRST SERVE
 ├─────────┼────────────────┼──────────────┼───────────────────┼─────────┼────────────────┼────────────────────┼─────────────────┤
 │ Average │                │              │                   │         │      5.8       │        9.6         │       5.8       │
 ╘═════════╧════════════════╧══════════════╧═══════════════════╧═════════╧════════════════╧════════════════════╧═════════════════╛
+```
+
+```python
+Scheduling Results: ROUND ROBIN, Quantum = 2
+╒═════════╤════════════════╤══════════════╤═══════════════════╤═══════════╤════════════════════╤════════════════╤═════════════════╕
+│   PID   │  Arrival Time  │  Burst Time  │  Completion Time  │  Quantum  │  Turn Around Time  │  Waiting Time  │  Response Time  │
+╞═════════╪════════════════╪══════════════╪═══════════════════╪═══════════╪════════════════════╪════════════════╪═════════════════╡
+│   P1    │       0        │      7       │        19         │     2     │         19         │       12       │        0        │
+├─────────┼────────────────┼──────────────┼───────────────────┼───────────┼────────────────────┼────────────────┼─────────────────┤
+│   P2    │       2        │      4       │         9         │     2     │         7          │       3        │        0        │
+├─────────┼────────────────┼──────────────┼───────────────────┼───────────┼────────────────────┼────────────────┼─────────────────┤
+│   P3    │       4        │      1       │         7         │     2     │         3          │       2        │        2        │
+├─────────┼────────────────┼──────────────┼───────────────────┼───────────┼────────────────────┼────────────────┼─────────────────┤
+│   P4    │       5        │      4       │        17         │     2     │         12         │       8        │        4        │
+├─────────┼────────────────┼──────────────┼───────────────────┼───────────┼────────────────────┼────────────────┼─────────────────┤
+│   P5    │       6        │      3       │        18         │     2     │         12         │       9        │        5        │
+├─────────┼────────────────┼──────────────┼───────────────────┼───────────┼────────────────────┼────────────────┼─────────────────┤
+│ Average │                │              │                   │           │        10.6        │      6.8       │       2.2       │
+╘═════════╧════════════════╧══════════════╧═══════════════════╧═══════════╧════════════════════╧════════════════╧═════════════════╛
+```
+
+## How it works
+
+Given the predefined inputs the program automatically computes "Completion Time"-- time taken by the process to complete.
+
+```
+# For FSFC:
+
+CT = previous_process_burst_time + next_process_burst_time 
+
+# For RR:
+
+if remaining_burst <= quantum
+    CT = current_time + remaining_burst
+else
+    remaining_burst -= quantum
+    current_time += quantum
+    then returns to the queue
+```
+
+After getting the completion time getting the "Start".
+
+```
+start = max(prev_time, arrive_time)
+```
+
+Using the computations above:
+
+```
+finish = completion
+
+turn_around = finish - arrive_time
+waiting = turn_around - burst_time
+response = start - arrive_time
 ```

@@ -18,11 +18,14 @@ class FCFS(SchedulingProcess):
 
     def compute_wait(self):
         return self.turn_around_time - self.burst_time
+    
+    def compute_completion(self):
+        return self.start + self.burst_time
 
     def compute_response(self):
         return self.start - self.arrv_time
 
-    def compute(self, prev_time):
+    def first_come_first_serve(self, prev_time):
         """
         Compute all metrics for this process given the previous completion time.
         """
@@ -53,7 +56,7 @@ class FCFS(SchedulingProcess):
         prev_time = 0
         scheduled = []
         for proc in processes:
-            proc.compute(prev_time)
+            proc.first_come_first_serve(prev_time)
             prev_time = proc.comp_time
             scheduled.append(proc)
 

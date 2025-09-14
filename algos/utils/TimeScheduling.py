@@ -4,9 +4,9 @@ def header_formatter(obj:object):
 def calc_avg(processes, index):
     return sum(p[index] for p in processes) / len(processes)
 
-def table(processes, headers):
+def table(items, headers):
     from tabulate import tabulate
-    return tabulate(processes, headers=headers, tablefmt="fancy_grid", stralign="center", numalign="center")
+    return tabulate(items, headers=headers, tablefmt="fancy_grid", stralign="center", numalign="center")
 
 def iterate_data(data):
     for index in range(len(data['arrv_time'])):
@@ -25,8 +25,8 @@ def set_processes(data, scheduling_algo):
     
     if scheduling_algo.__name__ == 'FCFS':
         for arrival, burst in iterate_data(data):
-            obj = scheduling_algo(pid=len(processes)+1, arrv_time=arrival, burst_time=burst)
-            processes.append(obj)
+            proc_obj = scheduling_algo(pid=len(processes)+1, arrv_time=arrival, burst_time=burst)
+            processes.append(proc_obj)
             
     elif scheduling_algo.__name__ == 'RoundRobin':
         if 'quantum' not in data:
@@ -34,8 +34,8 @@ def set_processes(data, scheduling_algo):
         
         quantum = data['quantum']
         for arrival, burst in iterate_data(data):
-            obj = scheduling_algo(pid=len(processes)+1, arrv_time=arrival, burst_time=burst, quantum=quantum)
-            processes.append(obj)
+            proc_obj = scheduling_algo(pid=len(processes)+1, arrv_time=arrival, burst_time=burst, quantum=quantum)
+            processes.append(proc_obj)
             
     else:
         raise ValueError("Unsupported scheduling algorithm")
@@ -54,13 +54,29 @@ def schedule_results(processes, scheduling_algo):
     return results
 
 def run_scheduling(data, algo, to_table=True):
+    
     processes = set_processes(data, algo)
     results = schedule_results(processes, algo)
+    
+    if algo.__name__ == 'RoundRobin':
+        title = f"Round Robin Scheduling Results (Quantum={data['quantum']})"
+    elif algo.__name__ == 'FCFS':
+        title = "First Come First Serve Scheduling Results"
+    else:
+        print("Invalid Algorithm")
+        
     if to_table:
-        headers = header_formatter(algo().to_dict() if algo.__name__ == 'FCFS' else algo(quantum=data['quantum']).to_dict())
-        print("Scheduling Results:")
+        headers = table_header(to_table, algo)
+        print(title)
         print(table(results, headers=headers))
+        
     else:
         for result in results:
             print(result)
+            
     return results
+
+def table_header(to_table, algo):
+    if to_table:
+        return header_formatter(algo().to_dict() if algo.__name__ == 'FCFS' else algo(quantum=2).to_dict())
+    return None
