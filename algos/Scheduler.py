@@ -18,6 +18,22 @@ class SchedulingProcess:
     def __repr__(self):
         return f"Process(pid={self.pid}, arrv_time={self.arrv_time}, burst_time={self.burst_time}, comp_time={self.comp_time})"
 
-
     def get(self):
         return self.pid, self.arrv_time, self.burst_time, self.comp_time
+    
+    def compute_completion(self):
+        return self.start + self.burst_time
+    
+    def compute_turnaround(self):
+        return self.comp_time - self.arrv_time
+    
+    def formatted_id(self):
+        return f"P{self.pid}"
+    
+    def to_dict(self):
+        return {
+            "PID": self.pid,
+            "Arrival Time": self.arrv_time,
+            "Burst Time": self.burst_time,
+            "Completion Time": self.comp_time
+        }

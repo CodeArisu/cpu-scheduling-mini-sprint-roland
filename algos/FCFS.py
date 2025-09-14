@@ -16,20 +16,11 @@ class FCFS(SchedulingProcess):
     def compute_start(self, prev_time):
         return max(prev_time, self.arrv_time)
 
-    def compute_completion(self):
-        return self.start + self.burst_time
-
-    def compute_turnaround(self):
-        return self.comp_time - self.arrv_time
-
     def compute_wait(self):
         return self.turn_around_time - self.burst_time
 
     def compute_response(self):
         return self.start - self.arrv_time
-
-    def formatted_id(self):
-        return f"P{self.pid}"
 
     def compute(self, prev_time):
         """
@@ -41,6 +32,16 @@ class FCFS(SchedulingProcess):
         self.wait_time = self.compute_wait()
         self.response_time = self.compute_response()
         return self
+    
+    def to_dict(self):
+        parent = super().to_dict()
+        child = {
+            "Start": self.start,
+            "Waiting Time": self.wait_time,
+            "Turn Around Time": self.turn_around_time,
+            "Response Time": self.response_time
+        }
+        return {**parent, **child}
 
     @staticmethod
     def schedule(processes):
