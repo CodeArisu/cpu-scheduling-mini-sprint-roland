@@ -6,16 +6,6 @@ A small coding project for simulating CPU Scheduling Algorithms such as First Co
 ## How to Run
 * Using IDE (VSCode) run main.py
 * Using terminal run:
-
-
-
-# CPU Scheduling Algorithm Simulation
-
-A small coding project for simulating CPU Scheduling Algorithms such as First Come First Serve (FCFS) Algorithm and Round Robin (RR) Algorithm. This repository shows how different CPU Scheduling computes time schedules for each processes as inputs.
-
-## How to Run
-* Using IDE (VSCode) run main.py
-* Using terminal run:
 activate python Virtual Environment:
 ```bash
 source .venv/bin/activate
