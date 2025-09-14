@@ -73,28 +73,31 @@ Given the predefined inputs the program automatically computes "Completion Time"
 ```
 # For FSFC:
 
-CT = previous_process_burst_time + next_process_burst_time 
+completion_time = previous_process_burst_time + next_process_burst_time 
 
 # For RR:
 
 if remaining_burst <= quantum
-    CT = current_time + remaining_burst
+    completion_time = current_time + remaining_burst
+
 else
-    remaining_burst -= quantum
-    current_time += quantum
+    # subtracts until it is less than the input quantum
+    remaining_burst = remaining_burst - quantum
+    current_time = current_time + quantum
     then returns to the queue
 ```
 
 After getting the completion time getting the "Start".
 
 ```
+# compares values using maximum
 start = max(prev_time, arrive_time)
 ```
 
 Using the computations above:
 
 ```
-finish = completion
+finish = completion_time
 
 turn_around = finish - arrive_time
 waiting = turn_around - burst_time
