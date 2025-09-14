@@ -11,5 +11,5 @@ data = {
 if __name__ == "__main__":
     
     # runs scheduling for the given data and algorithm
-    run_scheduling(data, fcfs.FCFS, to_table=True)
-    run_scheduling(data, rr.RoundRobin, to_table=True)
+    run_scheduling(data=data, algo=fcfs.FCFS, to_table=True)
+    run_scheduling(data=data, algo=rr.RoundRobin, to_table=True)    

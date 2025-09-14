@@ -53,11 +53,11 @@ def schedule_results(processes, scheduling_algo):
     results.append(("Average", "", "", "", "", f"{avg_tat:.2f}", f"{avg_wt:.2f}", f"{avg_rt:.2f}"))
     return results
 
-def run_scheduling(data, scheduling_algo, to_table=True):
-    processes = set_processes(data, scheduling_algo)
-    results = schedule_results(processes, scheduling_algo)
+def run_scheduling(data, algo, to_table=True):
+    processes = set_processes(data, algo)
+    results = schedule_results(processes, algo)
     if to_table:
-        headers = header_formatter(scheduling_algo().to_dict() if scheduling_algo.__name__ == 'FCFS' else scheduling_algo(quantum=data['quantum']).to_dict())
+        headers = header_formatter(algo().to_dict() if algo.__name__ == 'FCFS' else algo(quantum=data['quantum']).to_dict())
         print("Scheduling Results:")
         print(table(results, headers=headers))
     else:
