@@ -1,7 +1,8 @@
 
 # CPU Scheduling Algorithm Simulation
 
-A small coding project for simulating CPU Scheduling Algorithms such as First Come First Serve (FCFS) Algorithm and Round Robin (RR) Algorithm. This repository shows how different CPU Scheduling computes time schedules for each processes as inputs.
+A coding sprint for simulating CPU Time Scheduling Algorithms such as First Come First Serve (FCFS) Algorithm and Round Robin (RR) Algorithm. This repository visualized how different CPU Scheduling computes time schedules for each processes as inputs. Though
+it can only print tables for each algorithms calculated scheduled reports.
 
 ## How to Run
 * Using IDE (VSCode) run main.py
@@ -70,13 +71,13 @@ Scheduling Results: ROUND ROBIN, Quantum = 2
 
 Given the predefined inputs the program automatically computes "Completion Time"-- time taken by the process to complete.
 
+### For FSFC:
 ```
-# For FSFC:
-
 completion_time = previous_process_burst_time + next_process_burst_time 
+```
 
-# For RR:
-
+### For RR:
+```
 if remaining_burst <= quantum
     completion_time = current_time + remaining_burst
 
@@ -87,8 +88,7 @@ else
     then returns to the queue
 ```
 
-After getting the completion time getting the "Start".
-
+After getting the completion time, calculate the "Start".
 ```
 # compares values using maximum
 start = max(prev_time, arrive_time)
@@ -103,3 +103,13 @@ turn_around = finish - arrive_time
 waiting = turn_around - burst_time
 response = start - arrive_time
 ```
+
+## Notes:
+
+This program only shows a direct table results using the predefined dataset
+
+### For enhancements:
+* Detailed visualization of the patterns and processes for in depth understanding. 
+* Custom inputs for better analyzation.
+* More available option for algorithms.
+* Optimization for maximum accuracy of the proccesses time scheduling calculations.

@@ -47,6 +47,17 @@ class FCFS(SchedulingProcess):
         return {**parent, **child}
 
     @staticmethod
+    def print_gantt_chart(processes):
+        """
+        Print a simple Gantt timeline as [(P1, 0–7), (P2, 7–11), ...]
+        """
+        timeline = []
+        for p in processes:
+            timeline.append(f"(P{p.pid}, {p.start}–{p.comp_time})")
+
+        print("Timeline:", " ".join(timeline))
+
+    @staticmethod
     def schedule(processes):
         """
         Perform FCFS scheduling on a list of FCFS processes.
@@ -59,6 +70,9 @@ class FCFS(SchedulingProcess):
             proc.first_come_first_serve(prev_time)
             prev_time = proc.comp_time
             scheduled.append(proc)
+        
+        print()
+        FCFS.print_gantt_chart(scheduled)
 
         return scheduled
 

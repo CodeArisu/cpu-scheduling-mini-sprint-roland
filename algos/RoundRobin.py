@@ -35,6 +35,14 @@ class RoundRobin(SchedulingProcess):
     
     def get_quantum(self):
         return self.quantum
+    
+    @staticmethod
+    def print_gantt_chart(timeline):
+        """
+        Print a simple timeline for RR, showing each slice executed.
+        """
+        formatted = [f"({pid}, {start}–{end})" for pid, start, end in timeline]
+        print("Timeline:", " ".join(formatted))
 
     @staticmethod
     def schedule(processes):
@@ -94,4 +102,7 @@ class RoundRobin(SchedulingProcess):
                 remaining -= 1
                 scheduled.append(proc)
 
+        print()
+        RoundRobin.print_gantt_chart([(p.formatted_id(), p.comp_time - p.burst_time, p.comp_time) for p in scheduled])
+        
         return scheduled

@@ -9,22 +9,21 @@ data = {
 }
 
 def main():
-    print("Predefined Data:")
+    print("Predefined Dataset (Processes):")
     print(table(data.items(), headers=["Parameter", "Values"]))
 
-    if input("Do you want to run FCFS or Round Robin Scheduling? (with Predefined Data) [Y/N]: ").strip().upper() == 'Y':
-        choice = input("Enter 'FCFS' or 'RR': ").strip().upper()
+    while True:
+        choice = input("\nRun Scheduling? (FCFS / RR / Q to quit): ").strip().upper()
 
         if choice == 'FCFS':
             run_scheduling(data=data, algo=fcfs.FCFS, to_table=True)
         elif choice == 'RR':
             run_scheduling(data=data, algo=rr.RoundRobin, to_table=True)
+        elif choice == 'Q':
+            print("Exiting the program.")
+            break
         else:
-            choice = input("Invalid choice. Please enter 'FCFS' or 'RR': ").strip().upper()
-            
-    else:
-        print("Exiting the program.")
-        return
+            print("Invalid choice. Please enter 'FCFS', 'RR', or 'Q'.")
     
 if __name__ == "__main__":
     main()
